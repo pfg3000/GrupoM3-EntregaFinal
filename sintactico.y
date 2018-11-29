@@ -1496,7 +1496,7 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
     desapilarOperando();
     if(strcmp(strOpe,"_aux")==0)
     {
-        sprintf(strAux, "%s%d","_aux" ,nroAuxReal);
+        sprintf(strAux, "%s%d","_auxR" ,nroAuxReal);
         strcpy(auxSymbol.tipo,"float");
         strcpy(auxSymbol.nombre,strAux);
         strcpy(auxSymbol.valor,"0");
@@ -1511,7 +1511,7 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
     desapilarOperando();
     if(strcmp(strOpe,"_aux")==0)
     {
-        sprintf(strAux, "%s%d","_aux" ,nroAuxReal);
+        sprintf(strAux, "%s%d","_auxR" ,nroAuxReal);
         strcpy(auxSymbol2.tipo,"float");
         strcpy(auxSymbol2.nombre,strAux);
         strcpy(auxSymbol2.valor,"0");
