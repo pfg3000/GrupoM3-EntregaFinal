@@ -18,6 +18,9 @@ write a;
 write b;
 write d;
 
+a:= AVG([2, 4, 6]);
+write a;
+
 -/
 write "IF COMUN";
 if(b==1)
@@ -26,7 +29,7 @@ if(b==1)
     write a;
 }
 /-
-
+-/
 write "IF CON ELSE";
 if(b==1)
 {
@@ -36,7 +39,7 @@ if(b==1)
 else{
     write a;
 }
-
+/-
 -/
 write "IF CON AND";
 if((b==1) AND (a>0))

@@ -1250,10 +1250,12 @@ fprintf(p,"END START; final del archivo. \n");
         }
     }
             //DECLARACION DE AUXILIARES
-    for(i=0;i<100;i++){
-        fprintf(p,"\t@auxR%d \tDD 0.0\n",i);
+    //for(i=0;i<100;i++){
+        //fprintf(p,"\t@auxR%d \tDD 0.0\n",i);
         //fprintf(p,"\t@_auxE%d \tDW 0\n",i);
-    }
+        fprintf(p,"\t@aux\tDD 0.0\n");
+
+    //}
 }
 void generarCONC(){
 	desapilarOperando();	//segundo operando en strOpe
@@ -1570,9 +1572,9 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
     desapilarOperando();
     if(strcmp(strOpe,"_aux")==0)
     {
-        sprintf(strAux, "%s%d","_auxR" ,nroAuxReal);
+        // sprintf(strAux, "%s%d","_auxR" ,nroAuxReal);
         strcpy(auxSymbol.tipo,"float");
-        strcpy(auxSymbol.nombre,strAux);
+        strcpy(auxSymbol.nombre,strOpe);
         strcpy(auxSymbol.valor,"0");
         nroAuxReal++;
     }
@@ -1585,9 +1587,9 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
     desapilarOperando();
     if(strcmp(strOpe,"_aux")==0)
     {
-        sprintf(strAux, "%s%d","_auxR" ,nroAuxReal);
+        // sprintf(strAux, "%s%d","_auxR" ,nroAuxReal);
         strcpy(auxSymbol2.tipo,"float");
-        strcpy(auxSymbol2.nombre,strAux);
+        strcpy(auxSymbol2.nombre,strOpe);
         strcpy(auxSymbol2.valor,"0");
         nroAuxReal++;
     }

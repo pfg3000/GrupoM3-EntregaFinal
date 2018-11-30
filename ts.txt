@@ -4,10 +4,12 @@ _d                       |float                    |d                        |1 
 _b                       |int                      |b                        |1                        |6648504                  
 _c                       |int                      |c                        |1                        |0                        
 _pri                     |string                   |pri                      |3                        |6648504                  
-_0p12                    |cfloat                   |0.12                     |4                        |7604216                  
-_1                       |cint                     |1                        |1                        |7604216                  
-_12p1                    |cfloat                   |12.1                     |4                        |7604216                  
+_0p12                    |cfloat                   |0.12                     |4                        |8128504                  
+_1                       |cint                     |1                        |1                        |8128504                  
+_12p1                    |cfloat                   |12.1                     |4                        |8128504                  
 _escribir en pantalla    |cstring                  |Escribir en pantalla     |20                       |0                        
 _hola                    |cstring                  |Hola                     |4                        |0                        
-_if con else             |cstring                  |IF CON ELSE              |11                       |0                        
+_2                       |cint                     |2                        |1                        |8128504                  
+_4                       |cint                     |4                        |1                        |8128504                  
+_6                       |cint                     |6                        |1                        |47                       
 
