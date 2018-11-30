@@ -712,7 +712,8 @@ constanteNumerica:
     | REAL              {   guardarFloatEnTs(yylval.s);
                             fprintf(stdout,"\nconstante - REAL: %s" , yylval.s);
                             fflush(stdout);
-                            apilarPolaca(yylval.s); }
+                            replace_str(yylval.s);
+                            apilarPolaca(prefix_(downcase(yylval.s))); }
     | BOOLEANO          {   guardarBooleanoEnTs(yylval.s);
                             fprintf(stdout,"\nconstante - BOOLEANO: %s" , yylval.s); 
                             fflush(stdout);
@@ -755,21 +756,27 @@ void guardarIntEnTs(char entero[]) {
 }
 
 void guardarFloatEnTs(char flotante[]) {
-    replace_str(flotante);
     saveSymbol(flotante,"cFloat", NULL);
     insertarTipo("cFloat");
 }
 
 void replace_str(char *str)
 {
+    //printf("\n entro1 %s\n",str);
     char *ToRep = strstr(str,".");
-    char *Rest = (char*)malloc(strlen(ToRep));
+    //printf("\n entro2 %s\n",ToRep);
+    if(ToRep!=NULL){
+    char *Rest = (char*)malloc(strlen(ToRep)+1);
+    //printf("\n entro3 %s\n",Rest);
     strcpy(Rest,((ToRep)+strlen(".")));
-
+    //printf("\n entro4 %s\n",Rest);
     strcpy(ToRep,"p");
+    //printf("\n entro5 %s\n",ToRep);
     strcat(ToRep,Rest);
-
+    //printf("\n entro6 %s\n",ToRep);
     free(Rest);
+    //printf("\n entro7 %s\n",str);
+    }
 }
 
 void guardarStringEnTs(char cadena[]) {
@@ -851,6 +858,13 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
         pos_st++;
     }
     symbol newSymbol;
+    
+     printf("\n Llegue... \n");
+    if((strcmp(type,"float")==0 || strcmp(type,"cfloat")==0) && strstr(mynombre,".")!=NULL )
+        replace_str(mynombre);
+    
+    printf("\n Pase... \n");
+
     strcpy(newSymbol.nombre, prefix_(downcase(mynombre)));
     strcpy(newSymbol.tipo, type);
     if (valor == NULL){
@@ -1182,7 +1196,7 @@ fprintf(p,"END START; final del archivo. \n");
     float auxi;
     char auxs[50];
     for(i=0; i < pos_st ; i++){
-
+        
         if(strcmp(symbolTable[i].tipo, "float")==0){
             fprintf (p, "\t@%s\tdd\t?\n", &symbolTable[i].nombre[1]);
         }
@@ -1198,7 +1212,7 @@ fprintf(p,"END START; final del archivo. \n");
 
         if(strcmp(symbolTable[i].tipo, "cint")==0){
             auxi= atoi(symbolTable[i].valor);
-            sprintf(auxs, "%d.0", auxi);
+            sprintf(auxs, "%.3f", auxi);
             fprintf (p, "\t@%s\tdd\t%s\n", symbolTable[i].nombre, auxs);
         }
 
@@ -1212,8 +1226,8 @@ fprintf(p,"END START; final del archivo. \n");
     }
             //DECLARACION DE AUXILIARES
     for(i=0;i<100;i++){
-        fprintf(p,"\t@_auxR%d \tDD 0.0\n",i);
-        fprintf(p,"\t@_auxE%d \tDW 0\n",i);
+        fprintf(p,"\t@auxR%d \tDD 0.0\n",i);
+        //fprintf(p,"\t@_auxE%d \tDW 0\n",i);
     }
 }
 void generarCONC(){
@@ -1252,18 +1266,35 @@ desapilarOperandos(1);
     //fprintf(ArchivoAsm,"\n %s \n", auxSymbol.tipo);
     if(strcmp(auxSymbol.tipo,"float")==0){
         fprintf(ArchivoAsm,"\tdisplayFloat @%s, 2\n",&auxSymbol.nombre[1]);
-    } else
-    if(strcmp(auxSymbol.tipo,"cfloat")==0){
-        fprintf(ArchivoAsm,"\tdisplayFloat @%s, 2\n",auxSymbol.nombre);
-    } else if (strcmp(auxSymbol.tipo,"string")==0){
-        fprintf(ArchivoAsm,"\n\tLEA DX, @%s \n",&auxSymbol.nombre[1]);
-        fprintf(ArchivoAsm,"\tMOV AH, 9\n");
-        fprintf(ArchivoAsm,"\tINT 21H\n");
-    } else {
-        fprintf(ArchivoAsm,"\n\tLEA DX, @%s \n",auxSymbol.nombre);
-        fprintf(ArchivoAsm,"\tMOV AH, 9\n");
-        fprintf(ArchivoAsm,"\tINT 21H\n");
-    }
+        goto sig;
+    } 
+    //else
+        if(strcmp(auxSymbol.tipo,"cfloat")==0){
+            fprintf(ArchivoAsm,"\tdisplayFloat @%s, 2\n",auxSymbol.nombre);
+            goto sig;
+        } 
+        //else
+            if(strcmp(auxSymbol.tipo,"int")==0){
+                fprintf(ArchivoAsm,"\tdisplayFloat @%s, 2\n",&auxSymbol.nombre[1]);
+                goto sig;
+            } 
+            //else
+                if(strcmp(auxSymbol.tipo,"cint")==0){
+                    fprintf(ArchivoAsm,"\tdisplayFloat @%s, 2\n",auxSymbol.nombre);
+                    goto sig;
+                } 
+                //else 
+                    if (strcmp(auxSymbol.tipo,"string")==0){
+                        fprintf(ArchivoAsm,"\n\tLEA DX, @%s \n",&auxSymbol.nombre[1]);
+                        fprintf(ArchivoAsm,"\tMOV AH, 9\n");
+                        fprintf(ArchivoAsm,"\tINT 21H\n");
+                    } 
+                    else {
+                        fprintf(ArchivoAsm,"\n\tLEA DX, @%s \n",auxSymbol.nombre);
+                        fprintf(ArchivoAsm,"\tMOV AH, 9\n");
+                        fprintf(ArchivoAsm,"\tINT 21H\n");
+                        }
+        sig:
         fprintf(ArchivoAsm,"\tnewline\n");
 }
 void generarADD(){
@@ -1478,7 +1509,8 @@ desapilarOperandos(2);
         }
     }else{
         if(strcmp(auxSymbol2.tipo,"cfloat")==0){
-            fprintf(ArchivoAsm,"\tfld @%s\n",auxSymbol2.nombre); //fld qword ptr ds:[_%s]\n
+            printf("\ncfloat %s \n", auxSymbol2.nombre);
+            fprintf(ArchivoAsm,"\tfld @%s\n",&auxSymbol2.nombre[1]); //fld qword ptr ds:[_%s]\n
     		fprintf(ArchivoAsm,"\tfstp @%s\n",&auxSymbol.nombre[1]); //qword ptr ds:[
         }
         if(strcmp(auxSymbol2.tipo,"float")==0){
