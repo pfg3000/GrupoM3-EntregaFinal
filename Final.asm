@@ -17,6 +17,24 @@ vtext db 100 dup('$')
  
 ;Declaracion de variables de usuario
 	@a	dd	?
+	@d	dd	?
+	@b	dd	?
+	@c	dd	?
+	@pri	db	MAXTEXTSIZE dup (?),'$'
+	@_0	dd	0.0
+	@_1	dd	0.0
+	@_12p1	dd	12.000
+	@_escribir_en_pantalla	db	'Escribir en pantalla','$',29 dup (?)
+	@_hola	db	'Hola','$',45 dup (?)
+	@_10	dd	0.0
+	@_2	dd	0.0
+	@_48	dd	0.0
+	@_25	dd	0.0
+	@_5	dd	0.0
+	@_3	dd	0.0
+	@_32p3	dd	32.000
+	@_99	dd	0.0
+	@_77	dd	0.0
 	@_auxR0 	DD 0.0
 	@_auxE0 	DW 0
 	@_auxR1 	DD 0.0
@@ -230,27 +248,27 @@ START:
 
 ;Comienzo codigo de usuario
 
-	fld _0
+	fld @_0
 	fstp @a
-	fld _1
+	fld @_1
 	fstp @b
-	fld _12.1
+	fld @_12p1
 	fstp @d
 
-	LEA DX, ! 
+	LEA DX, @_escribir_en_pantalla 
 	MOV AH, 9
 	INT 21H
 	newline
-	MOV SI, OFFSET _hola
+	MOV SI, OFFSET @_hola
 	MOV DI, OFFSET @pri
 	call COPIAR
 @@etiq1:
-	fld _10
+	fld @_10
 	fcomp @a
 	fstsw AX
 	sahf
 	JNA @@etiq2
-	fld _0
+	fld @_0
 	fcomp @b
 	fstsw AX
 	sahf
@@ -258,70 +276,70 @@ START:
 	displayFloat @a, 2
 	newline
 @@etiq3:
-	fld _1
+	fld @_1
 	fld @a
 	fadd St(0),St(1)
 	fstp @a
 	jmp @@etiq1
 @@etiq2:
-	fld _0
-	fstp @aux0
-	fld _2
-	fld @aux1
+	fld @_0
+	fstp @auxR0
+	fld @_2
+	fld @auxR1
 	fadd St(0),St(1)
 	fld @a
-	fstp @aux2
+	fstp @auxR2
 	fld @b
 	fld @a
 	fadd St(0),St(1)
-	fld @aux3
+	fld @auxR3
 	fadd St(0),St(1)
-	fstp @aux4
+	fstp @auxR4
 	fld @b
 	fld @a
 	fadd St(0),St(1)
 	fld @c
-	fld @aux5
+	fld @auxR5
 	fmul St(0),St(1)
 	fadd St(0),St(1)
-	fstp @aux6
-	fld _48
-	fld @aux7
+	fstp @auxR6
+	fld @_48
+	fld @auxR7
 	fadd St(0),St(1)
-	fstp @aux8
-	fld _5
-	fld _25
+	fstp @auxR8
+	fld @_5
+	fld @_25
 	fdiv St(0),St(1)
-	fld @aux9
+	fld @auxR9
 	fadd St(0),St(1)
-	fstp @aux10
-	fld _5
-	fld @aux11
+	fstp @auxR10
+	fld @_5
+	fld @auxR11
 	fdiv St(0),St(1)
-	fstp @aux12
+	fstp @auxR12
 	fadd St(0),St(1)
-	fstp @aux13
-	fld _0
-	fstp @aux14
-	fld _1
-	fld @aux15
+	fstp @auxR13
+	fld @_0
+	fstp @auxR14
+	fld @_1
+	fld @auxR15
 	fadd St(0),St(1)
 	fld @b
-	fstp @aux16
-	fld _2
-	fld @aux17
+	fstp @auxR16
+	fld @_2
+	fld @auxR17
 	fadd St(0),St(1)
-	fstp @aux18
-	fld _3
-	fld @aux19
+	fstp @auxR18
+	fld @_3
+	fld @auxR19
 	fadd St(0),St(1)
-	fstp @aux20
-	fld @aux21
+	fstp @auxR20
+	fld @auxR21
 	fdiv St(0),St(1)
-	fstp @aux22
+	fstp @auxR22
 	fmul St(0),St(1)
-	fstp @aux23
-	fld @aux24
+	fstp @auxR23
+	fld @auxR24
 	fstp @0
 	fld @b
 	fld @a
@@ -330,7 +348,7 @@ START:
 	fstsw AX
 	sahf
 	JNZ @@etiq4
-	fld @aux25
+	fld @auxR25
 	fstp @1
 @@etiq4:
 	fld @b
@@ -342,37 +360,37 @@ START:
 	fstsw AX
 	sahf
 	JNZ @@etiq5
-	fld @aux26
+	fld @auxR26
 	fstp @1
 @@etiq5:
-	fld _48
+	fld @_48
 	fcomp @a
 	fstsw AX
 	sahf
 	JNZ @@etiq6
-	fld @aux27
+	fld @auxR27
 	fstp @1
 @@etiq6:
-	fld _5
-	fld _25
+	fld @_5
+	fld @_25
 	fdiv St(0),St(1)
 	fld @a
 	fstsw AX
 	sahf
 	JNZ @@etiq7
-	fld @aux28
+	fld @auxR28
 	fstp @1
 @@etiq7:
-	fld _32.3
+	fld @_32p3
 	fcomp @a
 	fstsw AX
 	sahf
 	JNZ @@etiq8
-	fld @aux29
+	fld @auxR29
 	fstp @1
 @@etiq8:
-	fld _1
-	fcomp @aux30
+	fld @_1
+	fcomp @auxR30
 	fstsw AX
 	sahf
 	JNZ @@etiq9
@@ -380,14 +398,14 @@ START:
 	newline
 @@etiq9:
 @@etiq10:
-	fld @aux31
+	fld @auxR31
 	fstp @0
-	fld _5
+	fld @_5
 	fcomp @a
 	fstsw AX
 	sahf
 	JNZ @@etiq11
-	fld @aux32
+	fld @auxR32
 	fstp @1
 @@etiq11:
 	fld @b
@@ -397,32 +415,32 @@ START:
 	fstsw AX
 	sahf
 	JNZ @@etiq12
-	fld @aux33
+	fld @auxR33
 	fstp @1
 @@etiq12:
-	fld _99
+	fld @_99
 	fcomp @a
 	fstsw AX
 	sahf
 	JNZ @@etiq13
-	fld @aux34
+	fld @auxR34
 	fstp @1
 @@etiq13:
-	fld _1
-	fcomp @aux35
+	fld @_1
+	fcomp @auxR35
 	fstsw AX
 	sahf
 	JNZ @@etiq14
-	fld _2
+	fld @_2
 	fcomp @a
 	fstsw AX
 	sahf
 	JNB @@etiq15
-	fld _99
+	fld @_99
 	fstp @c
 	jmp @@etiq16
 @@etiq15:
-	fld _77
+	fld @_77
 	fstp @b
 @@etiq16:
 	jmp @@etiq10
