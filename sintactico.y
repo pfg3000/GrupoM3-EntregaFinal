@@ -113,7 +113,6 @@ symbol auxSymbol;
 symbol auxSymbol2;
 // el valor ! representa al simbolo nulo.
 
-
 void writeTupla(FILE *p ,int filas,symbol symbolTable[]){
     int j;
     for(j=0; j < filas; j++ ){
@@ -174,6 +173,8 @@ void replace_str(char *);
 char varTypeArray[2][100][50]; // Dos matrices de 100 filas y 50 columnas
 int idPos = 0;
 int typePos = 0;
+int hayAnd = 0;
+int hayOr = 0;
 
 void collectId (char *id);
 void collectType (char *type);
@@ -302,12 +303,20 @@ decision:
                                                 desapilarEtiqueta();
                                                 strcat(Etiqueta,":");
                                                 apilarPolaca(Etiqueta);
+                                                if(hayAnd !=0 )
+                                                    {
+                                                    desapilarEtiqueta();
+                                                    strcat(EtiqDesa,":");
+                                                    apilarPolaca(EtiqDesa);
+                                                    hayAnd--;
+                                                    }
                                                 fprintf(stdout,"\nFin del then");   
                                                 fflush(stdout); }
    | IF P_A condicion P_C L_A sentencias L_C {  fprintf(stdout,"\ndecision - IF P_A condicion P_C L_A sentencias L_C");
                                                 fflush(stdout);
                                                 fprintf(stdout,"\nInicio del then");
                                                 fflush(stdout);
+
                                                 strcpy(auxInlist,Etiqueta);
                                                 strcat(auxInlist,":");
                                                 generarEtiqueta();
@@ -316,8 +325,6 @@ decision:
                                                 apilarPolaca(auxInlist);
                                                 desapilarEtiqueta();
                                                 strcat(Etiqueta,":");
-                                                // aca esta la magia
-                                                // aca termina la magia 
                                                 apilarEtiqueta(Etiqueta);
                                                 fprintf(stdout,"\nFin del then");
                                                 fflush(stdout); }
@@ -327,7 +334,8 @@ decision:
                                                 fflush(stdout);
                                                 desapilarEtiqueta();
                                                 //strcat(EtiqDesa,":");
-                                                apilarPolaca(EtiqDesa); }
+                                                apilarPolaca(EtiqDesa); 
+                                                }
     | IF P_A condicion P_C L_A  L_C         {   fprintf(stdout,"\nFin del then");
                                                 fflush(stdout);
                                                 generarEtiqueta();//fin
@@ -338,12 +346,14 @@ decision:
                                                 apilarPolaca(EtiqDesa);
                                                 apilarEtiqueta(Etiqueta);   }
     ELSE                                    {   fprintf(stdout,"\nelse");
-                                                fflush(stdout); }
+                                                fflush(stdout); 
+                                                }
     L_A sentencias L_C                      {   fprintf(stdout,"\nfin del else");
                                                 fflush(stdout);
                                                 desapilarEtiqueta();
                                                 strcat(EtiqDesa,":");                                           
-                                                apilarPolaca(EtiqDesa); }
+                                                apilarPolaca(EtiqDesa); 
+                                                }
    ;
 
 iteracion: 
@@ -577,11 +587,11 @@ condicion:
                                         apilarPolaca("JNZ");    }
 
 
-    | P_A condicion P_C AND P_A condicion P_C   {   fprintf(stdout,"\ncondicion - AND");
+    | P_A condicion P_C AND P_A condicion P_C   {   fprintf(stdout,"\ncondicion - AND"); hayAnd++;
 
     }
 
-    | P_A condicion P_C OR P_A condicion P_C    {   fprintf(stdout,"\ncondicion - OR");
+    | P_A condicion P_C OR P_A condicion P_C    {   fprintf(stdout,"\ncondicion - OR"); hayOr++;
 
     }
 
@@ -713,7 +723,8 @@ constanteNumerica:
                             fprintf(stdout,"\nconstante - REAL: %s" , yylval.s);
                             fflush(stdout);
                             replace_str(yylval.s);
-                            apilarPolaca(prefix_(downcase(yylval.s))); }
+                            apilarPolaca(yylval.s); //apilarPolaca(prefix_(downcase(yylval.s)));
+                            } 
     | BOOLEANO          {   guardarBooleanoEnTs(yylval.s);
                             fprintf(stdout,"\nconstante - BOOLEANO: %s" , yylval.s); 
                             fflush(stdout);
@@ -859,11 +870,11 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
     }
     symbol newSymbol;
     
-     printf("\n Llegue... \n");
+    //printf("\n Llegue... \n");
     if((strcmp(type,"float")==0 || strcmp(type,"cfloat")==0) && strstr(mynombre,".")!=NULL )
         replace_str(mynombre);
     
-    printf("\n Pase... \n");
+    //printf("\n Pase... \n");
 
     strcpy(newSymbol.nombre, prefix_(downcase(mynombre)));
     strcpy(newSymbol.tipo, type);
@@ -874,6 +885,13 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
         strcpy(newSymbol.valor, valor);
     }
     newSymbol.longitud = strlen(nombre);
+
+    int pos = searchSymbol(nombre);
+    if(pos != -1)
+        {
+        printf("\nERROR!!!\nSimbolo duplicado ---> '%s' \n", nombre);
+        exit(0);
+        }
     symbolTable[use_pos] = newSymbol;
     newSymbol = nullSymbol;
     return 0;
@@ -1105,7 +1123,7 @@ void desapilarOperando(){
 funcion que guarda en la pila un operando
 ***************************************************/
 void apilarOperando(char *strOp){
-    printf("Apilando %s \n", strOp);
+    printf("Apilando %s --- %d\n", strOp, topePilaAsm);
     strtok(strOp,"\n");
     strcpy(strPila[topePilaAsm],strOp);
     topePilaAsm++;
@@ -1510,7 +1528,7 @@ desapilarOperandos(2);
     }else{
         if(strcmp(auxSymbol2.tipo,"cfloat")==0){
             printf("\ncfloat %s \n", auxSymbol2.nombre);
-            fprintf(ArchivoAsm,"\tfld @%s\n",&auxSymbol2.nombre[1]); //fld qword ptr ds:[_%s]\n
+            fprintf(ArchivoAsm,"\tfld @%s\n",auxSymbol2.nombre); //fld qword ptr ds:[_%s]\n
     		fprintf(ArchivoAsm,"\tfstp @%s\n",&auxSymbol.nombre[1]); //qword ptr ds:[
         }
         if(strcmp(auxSymbol2.tipo,"float")==0){
@@ -1569,6 +1587,8 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
     else
         auxSymbol2 = getSymbol(strOpe);
 
+printf("\nSimbolo1 %s ---Simbolo2 %s \n",auxSymbol.nombre,auxSymbol2.nombre);
+
     return;
 }
 
@@ -1592,6 +1612,7 @@ void generarAsm(){
     fprintf(ArchivoAsm,"\n\n;Comienzo codigo de usuario\n\n");
 
     while(fgets(linea,sizeof(linea),ArchivoPolaca)!=NULL){
+        printf("\n ************* %s ************* \n", linea);
         if( strcmp(linea,"+\n") == 0 )
             generarADD();
         else

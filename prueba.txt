@@ -1,6 +1,49 @@
 DEFVAR
-d : float
+
+a, d : float
+b, c : int
+pri : string
+
 ENDDEF
 
+a:=0.12;
+b:= 1;
 d:= 12.1;
+
+write "Escribir en pantalla";
+pri := "Hola";
+
+write pri;
+write a;
+write b;
 write d;
+
+-/
+write "IF COMUN";
+if(b==1)
+{
+    write a;
+    write a;
+}
+/-
+-/
+write "IF CON AND";
+if((b==1) AND (a>0))
+{
+write "---IF CON AND";
+write "---IF CON AND";
+}
+else
+{
+write "---IF CON AND ELSE";
+write "---IF CON AND ELSE";  
+}
+/-
+-/
+write "WHILE COMUN";
+while(b<5)
+{
+    b:=b+1;
+    write a;
+}
+/-
