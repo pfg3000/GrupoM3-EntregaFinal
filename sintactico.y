@@ -810,13 +810,16 @@ void collectId (char *id) {
 }
 
 void collectType (char *type){
-    strcpy(varTypeArray[1][typePos++], type);
+    int i=0;
+    for(i=typePos; i<idPos; i++ )
+        strcpy(varTypeArray[1][typePos++], type);
 }
 
 void consolidateIdType() {
     int i;
     for(i=0; i < idPos; i++) {
         saveSymbol(varTypeArray[0][i],varTypeArray[1][i], NULL);
+        printf("------------ id %s tipo %s -------------",varTypeArray[0][i],varTypeArray[1][i]);
     }
     idPos=0;
     typePos=0;
@@ -885,13 +888,17 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
         strcpy(newSymbol.valor, valor);
     }
     newSymbol.longitud = strlen(nombre);
-
-    int pos = searchSymbol(nombre);
-    if(pos != -1)
-        {
-        printf("\nERROR!!!\nSimbolo duplicado ---> '%s' \n", nombre);
-        exit(0);
-        }
+    
+    printf("\n Pase... %s \n",type);
+    if(strcmp(type,"float")==0 || strcmp(type,"int")==0 || strcmp(type,"string")==0){
+        int pos = searchSymbol(nombre);
+        if(pos != -1)
+            {
+            printf("\nERROR!!!\nSimbolo duplicado ---> '%s' \n", nombre);
+            exit(0);
+            }
+    }
+    //system("pause");
     symbolTable[use_pos] = newSymbol;
     newSymbol = nullSymbol;
     return 0;
