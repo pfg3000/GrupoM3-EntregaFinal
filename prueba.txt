@@ -18,7 +18,8 @@ write a;
 write b;
 write d;
 
-a:= AVG([2, 4, 6]);
+write "AVG Comun";
+a:= AVG([2, 4 , 6]);
 write a;
 
 -/

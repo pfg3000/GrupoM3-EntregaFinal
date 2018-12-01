@@ -20,7 +20,9 @@ b
 WRITE
 d
 WRITE
-0
+AVG_Comun
+WRITE
+___aux0
 _aux
 =
 _aux
@@ -39,12 +41,12 @@ _aux
 _aux
 =
 _aux
-3
+___aux1
 /
 _aux
 =
-
 _aux
+a
 =
 a
 WRITE

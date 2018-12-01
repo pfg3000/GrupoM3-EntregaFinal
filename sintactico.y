@@ -24,6 +24,7 @@ int nroAuxEntero=0;
 
 int contAVG=1; // Cantidad de expresiones de la funcion avg
 char stringAVG[25]; //guardamos el contador de AVG
+char stringAVGaux[25]; //guardamos el contador de AVG
 int auxAVG=0;
 char auxIdAVG[15]; //variable auxiliar donde guardare el resulta final de la AVG que colocare en el ID
 char stringBoolInlist[25];
@@ -93,7 +94,7 @@ int resetTipos();
 int compararTipos(char *a, char *b);
 int validarTipos(char tipo[]) ;
 /*fin de funciones y estructuras para handle de tipos */
-
+void addTablaConstantes(char * , char * , char * );
 
 /* funciones tabla de simbolos */
 typedef struct symbol {
@@ -107,6 +108,9 @@ typedef struct symbol {
 symbol nullSymbol;
 symbol symbolTable[1000];
 int pos_st = 0;
+
+symbol tablaConstantes[1000];
+int indiceConstante=0;
 
 // symbolo auxiliar
 symbol auxSymbol;
@@ -153,11 +157,16 @@ void CrearSymbolTable(symbol symbolTable[],char * ruta){
 }
 
 // helpers
+char auxAux[25];
+char *generarAUX();
 char *downcase(char *p);
 char *prefix_(char *p);
+char *prefix__(char *p);
 int searchSymbol(char key[]);
+int searchSymbolCTE(char key[]);
 int saveSymbol(char nombre[], char tipo[], char valor[] );
 symbol getSymbol(char nombre[]);
+symbol getSymbolCTE(char nombre[]);
 void symbolTableToExcel(symbol table[],char * ruta);
 /* fin de funciones tabla de simbolos */
 
@@ -201,6 +210,7 @@ void consolidateIdType();
 raiz: programa {    fprintf(stdout,"\nCompila OK\n\n"); 
                     fflush(stdout);
                     CrearSymbolTable(symbolTable,"ts.txt");
+                    //system("pause");
                     grabarPolaca(); 
                     generarAsm();   }
     ;
@@ -399,8 +409,8 @@ asignacion:
                                           //guardo el resultado final en el ID del AVG
 
                                             //fprintf(stdout,"\n\n\nPASEEEEEE 4\n\n\n"); 
-                                            apilarPolaca(auxIdAVG);
                                             apilarPolaca("_aux");  
+                                            apilarPolaca(auxIdAVG);
                                             apilarPolaca("=");
                                             strcpy(auxIdAVG,"");
                                         }
@@ -437,7 +447,7 @@ lista_asignacion:
                                         //-----------apilarPolaca("=");
                                         //guardamos el id donde guardaremos el resultado
                                         strcpy(auxId,$1);
-                                        //strcpy(auxIdAVG,$1);
+                                        strcpy(auxIdAVG,$1);
                                         
 
                                         //-------------apilarPolaca($1);
@@ -453,17 +463,19 @@ lista_asignacion:
                                 }
     | lista_asignacion ID ASIG    {     fprintf(stdout,"\nlista_asignacion - lista_asignacion ID ASIG");
                                         fflush(stdout); 
-                                        apilarPolaca($2);
                                         apilarPolaca("_aux");
+                                        apilarPolaca($2);
                                         apilarPolaca("=");  }
     ;
     
 
 avg: 
     AVG {   auxAVG=1;
-            apilarPolaca("0");//inicializo la variable "_aux" en 0
+            strcpy(stringAVGaux,generarAUX());
+            apilarPolaca(stringAVGaux);//inicializo la variable "_aux" en 0
             apilarPolaca("_aux");//creo mi variable "_aux" para acumular los resultados intermedios      
             apilarPolaca("=");
+            addTablaConstantes(stringAVGaux,"0","cfloat");
         
         } P_A C_A contenido_avg C_C P_C   {   fprintf(stdout,"\navg - AVG P_A C_A contenido_avg C_C P_C");
                                                         fflush(stdout); 
@@ -703,9 +715,11 @@ factor:
     | avg                       {   fprintf(stdout,"\nfactor - avg");
                                     fflush(stdout);
                                     sprintf(stringAVG, "%d", contAVG); // replaced itoa(contAVG, stringAVG, 10) for this.
-                                    
+                                    //sprintf(stringAVGaux, "%d", contAVG); // replaced itoa(contAVG, stringAVG, 10) for this.
+                                    strcpy(stringAVGaux,generarAUX());
+                                    addTablaConstantes(stringAVGaux,stringAVG,"cfloat");
                                     apilarPolaca("_aux");
-                                    apilarPolaca(stringAVG);
+                                    apilarPolaca(stringAVGaux);
                                     apilarPolaca("/");
                                     apilarPolaca("_aux");
                                     apilarPolaca("=");
@@ -845,6 +859,19 @@ char *prefix_(char *p){
     return p+1;
 }
 
+char *prefix__(char *p){
+    int tam = strlen(p);
+    strcat(p,"_");
+    p = p + tam ;
+    int i;
+    for(i=0; i < tam + 1 ; i++){
+        *(p+1) = *p;
+        p--;
+    }
+    *(p+1) = '_';
+    return p+1;
+}
+
 int searchSymbol(char key[]){
     static int llamada=0;
     llamada++;
@@ -854,6 +881,21 @@ int searchSymbol(char key[]){
     int i;
     for ( i = 0;  i < pos_st ; i++) {
         if(strcmp(symbolTable[i].nombre, mynombre) == 0){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int searchSymbolCTE(char key[]){
+    static int llamada=0;
+    llamada++;
+    char mynombre[100];
+    strcpy(mynombre,key);
+    //prefix__(downcase(mynombre));
+    int i;
+    for ( i = 0;  i < pos_st ; i++) {
+        if(strcmp(tablaConstantes[i].nombre, mynombre) == 0){
             return i;
         }
     }
@@ -907,6 +949,12 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
 symbol getSymbol(char nombre[]){
     int pos = searchSymbol(nombre);
     if(pos >= 0) return symbolTable[pos];
+    return nullSymbol;
+}
+
+symbol getSymbolCTE(char nombre[]){
+    int pos = searchSymbolCTE(nombre);
+    if(pos >= 0) return tablaConstantes[pos];
     return nullSymbol;
 }
 
@@ -1254,9 +1302,66 @@ fprintf(p,"END START; final del archivo. \n");
         //fprintf(p,"\t@auxR%d \tDD 0.0\n",i);
         //fprintf(p,"\t@_auxE%d \tDW 0\n",i);
         fprintf(p,"\t@aux\tDD 0.0\n");
-
     //}
+
+    		//DECLARACION DE CONSTANTES
+		for(i = 0; i<indiceConstante; i++){
+            if(strcmp(tablaConstantes[i].tipo,"cint")==0)
+            {
+            fprintf(p,"\t@%s \tDW %d\n",tablaConstantes[i].nombre,atoi(tablaConstantes[i].valor));
+            }
+            else
+                if(strcmp(tablaConstantes[i].tipo,"cfloat")==0)
+                {
+                fprintf(p,"\t@%s \tDD %s\n",tablaConstantes[i].nombre,tablaConstantes[i].valor);
+                }
+                else
+                    if(strcmp(tablaConstantes[i].tipo,"cstring")==0)
+                    {
+                    fprintf(p,"\t@%s \tDB \"%s\",'$',%d dup(?)\n",tablaConstantes[i].nombre,tablaConstantes[i].valor,50-strlen(tablaConstantes[i].valor));
+                    }
+                    else
+                    {
+                    fprintf(p,"\t@%s \tDB \"%s\",'$',%d dup(?)\n",tablaConstantes[i].nombre,tablaConstantes[i].valor,50-strlen(tablaConstantes[i].valor));
+                    }
+		}
 }
+
+char * generarAUX()
+{
+sprintf(auxAux,"___aux%d",nroAuxReal++);
+return auxAux;
+}
+
+void addTablaConstantes(char * nombre, char * valor, char * tipo)
+{
+    // if(strstr(valor,".")==NULL)
+    //     strcat(valor,".0");
+
+    //printf("\n11111111111111111\n");
+    if((strcmp(tipo,"float")==0 || strcmp(tipo,"cfloat")==0) && strstr(valor,".")==NULL)
+        sprintf(tablaConstantes[indiceConstante].valor,"%s.0",valor);
+    else
+        strcpy(tablaConstantes[indiceConstante].valor,valor);
+    //printf("\n222222222222\n");
+    strcpy(tablaConstantes[indiceConstante].tipo,tipo);
+    //printf("\n333333333333333333\n");
+    tablaConstantes[indiceConstante].longitud=0;
+    //printf("\n444444444444444444\n");
+    tablaConstantes[indiceConstante].limite=0;
+    //printf("\n5555555555555555555555\n");
+
+    if((strcmp(tipo,"float")==0 || strcmp(tipo,"cfloat")==0) && strstr(nombre,".")!=NULL )
+        replace_str(nombre);
+    //printf("\n6666666666666666666666 %s \t %s \t %s \n",nombre,valor,tipo);
+
+
+    strcpy(tablaConstantes[indiceConstante].nombre,nombre);
+    //printf("\n777777777777777777777777\n");
+    indiceConstante++;
+
+}
+
 void generarCONC(){
 	desapilarOperando();	//segundo operando en strOpe
     reemplazarBlancos(strOpe);
@@ -1393,6 +1498,8 @@ desapilarOperandos(2);
 
 void generarDIV(){
 desapilarOperandos(2);
+    printf("==== %s\n", auxSymbol.nombre);
+    printf("==== %s\n", auxSymbol2.nombre);
 
     if(strcmp(auxSymbol.tipo,"cint")==0){
         fprintf(ArchivoAsm,"\tfld @%s\n",auxSymbol.nombre); //fld qword ptr ds:[_%s]\n
@@ -1576,13 +1683,22 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
         strcpy(auxSymbol.tipo,"float");
         strcpy(auxSymbol.nombre,strOpe);
         strcpy(auxSymbol.valor,"0");
-        nroAuxReal++;
+        //nroAuxReal++;
     }
     else
+        {
         auxSymbol = getSymbol(strOpe);
+        
+        if(strstr(strOpe,"___")!=NULL)
+            {
+            auxSymbol = getSymbolCTE(strOpe);
+            }//printf("ERROR!!!\nNo se encuentra el operador %s -- %s\n",strOpe,auxSymbol.nombre);
+        }
     
     if (cant == 1)
         return;
+
+        //sprintf(strAux, "%s" ,strOpe);
 
     desapilarOperando();
     if(strcmp(strOpe,"_aux")==0)
@@ -1591,12 +1707,20 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
         strcpy(auxSymbol2.tipo,"float");
         strcpy(auxSymbol2.nombre,strOpe);
         strcpy(auxSymbol2.valor,"0");
-        nroAuxReal++;
+        //nroAuxReal++;
     }
     else
+        {
         auxSymbol2 = getSymbol(strOpe);
+        
+        if(strstr(strOpe,"___")!=NULL)
+            {
+            auxSymbol2 = getSymbolCTE(strOpe);
+            }//printf("ERROR!!!\nNo se encuentra el operador %s\n",strOpe);
+        }
 
-printf("\nSimbolo1 %s ---Simbolo2 %s \n",auxSymbol.nombre,auxSymbol2.nombre);
+//printf("\nSimbolo1 %s ---Simbolo2 %s \n",auxSymbol.nombre,auxSymbol2.nombre);
+//printf("\nOPE Simbolo1 %s ---OPE Simbolo2 %s \n",strAux,strOpe);
 
     return;
 }
