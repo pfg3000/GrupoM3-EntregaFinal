@@ -25,6 +25,7 @@ int nroAuxEntero=0;
 int contAVG=1; // Cantidad de expresiones de la funcion avg
 char stringAVG[25]; //guardamos el contador de AVG
 char stringAVGaux[25]; //guardamos el contador de AVG
+char stringINLISTaux[25]; //guardamos el contador de AVG
 int auxAVG=0;
 char auxIdAVG[15]; //variable auxiliar donde guardare el resulta final de la AVG que colocare en el ID
 char stringBoolInlist[25];
@@ -471,7 +472,7 @@ lista_asignacion:
 
 avg: 
     AVG {   auxAVG=1;
-            strcpy(stringAVGaux,generarAUX());
+            strcpy(stringAVGaux, generarAUX());//este es el 0 de _aux=0;
             apilarPolaca(stringAVGaux);//inicializo la variable "_aux" en 0
             apilarPolaca("_aux");//creo mi variable "_aux" para acumular los resultados intermedios      
             apilarPolaca("=");
@@ -613,18 +614,24 @@ condicion:
                                         //generarEtiqueta();
                                         //fprintf(stdout,"ETIQUETA DEL if con INLIST=  %s \n\n\n",Etiqueta);
                                         //apilarPolaca(Etiqueta);
+                                                   
+                                        strcpy(stringINLISTaux,generarAUX());
+                                        apilarPolaca(stringINLISTaux); // este es el 0 de _aux=0;
                                         apilarPolaca("_aux"); //creo variable auxiliar para guardar el resultado de 
                                                             //la busqueda de la funcion INLIST
-                                        apilarPolaca("0"); 
                                         apilarPolaca("=");
                                         strcpy(auxInlist,$3);
-                                        apilarPolaca(auxInlist);    }
+                                        apilarPolaca(auxInlist);   
+                                        addTablaConstantes(stringINLISTaux,"0","cfloat");
+                                          }
     PUNTO_Y_COMA C_A contenido_inlist C_C P_C   {   fprintf(stdout,"\ncondicion - PUNTO_Y_COMA C_A contenido_inlist C_C P_C");
                                                     fflush(stdout);
                                                     auxBool=1; 
                                                     //fprintf(stdout,"inlist: INLIST P_A ID PUNTO_Y_COMA C_A contenido_inlist C_C P_C\n");
-                                                    apilarPolaca("_aux");
-                                                    apilarPolaca("1");
+                                                    strcpy(stringINLISTaux,generarAUX());
+                                                    addTablaConstantes(stringINLISTaux,"1","cfloat");
+                                                    apilarPolaca(stringINLISTaux); //este es el 1 de antes apilarPolaca("_aux");
+                                                    apilarPolaca("_aux"); 
                                                     apilarPolaca("CMP");
                                                     generarEtiqueta();
                                                     fprintf(stdout,"\nETIQUETA if de INLIST=  %s:",Etiqueta);
@@ -642,8 +649,10 @@ contenido_inlist:
                     fprintf(stdout,"\nETIQUETA 1 =  %s",Etiqueta);
                     apilarPolaca(Etiqueta);
                     apilarPolaca("JNZ");
+                    strcpy(stringINLISTaux,generarAUX());
+                    addTablaConstantes(stringINLISTaux,"1","cfloat");
+                    apilarPolaca(stringINLISTaux); //este es el 1 de _aux=1;
                     apilarPolaca("_aux"); 
-                    apilarPolaca("1"); 
                     apilarPolaca("=");  
                     desapilarEtiqueta();
                     strcat(Etiqueta,":");
@@ -660,9 +669,11 @@ contenido_inlist:
                         fflush(stdout);
                         apilarPolaca(Etiqueta);
                         apilarPolaca("JNZ");
+                        strcpy(stringINLISTaux,generarAUX());
+                        addTablaConstantes(stringINLISTaux,"1","cfloat");
+                        apilarPolaca(stringINLISTaux); //este es el 1 de _aux=1;
                         apilarPolaca("_aux"); 
-                        apilarPolaca("1"); 
-                        apilarPolaca("=");
+                        apilarPolaca("=");  
                         desapilarEtiqueta();
                         strcat(Etiqueta,":");
                         fprintf(stdout,"\nDESAPILAR ETIQUETA 1=  %s",Etiqueta);
@@ -931,7 +942,7 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
     }
     newSymbol.longitud = strlen(nombre);
     
-    printf("\n Pase... %s \n",type);
+    //printf("\n Pase... %s \n",type);
     if(strcmp(type,"float")==0 || strcmp(type,"int")==0 || strcmp(type,"string")==0){
         int pos = searchSymbol(nombre);
         if(pos != -1)

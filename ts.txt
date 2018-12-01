@@ -4,13 +4,16 @@ _d                       |float                    |d                        |1 
 _b                       |int                      |b                        |1                        |6845112                  
 _c                       |int                      |c                        |1                        |0                        
 _pri                     |string                   |pri                      |3                        |6845112                  
-_0p12                    |cfloat                   |0.12                     |4                        |1181688                  
-_1                       |cint                     |1                        |1                        |1181688                  
-_12p1                    |cfloat                   |12.1                     |4                        |1181688                  
-_escribir en pantalla    |cstring                  |Escribir en pantalla     |20                       |0                        
-_hola                    |cstring                  |Hola                     |4                        |0                        
-_avg comun               |cstring                  |AVG Comun                |9                        |0                        
-_2                       |cint                     |2                        |1                        |1181688                  
-_4                       |cint                     |4                        |1                        |1181688                  
-_6                       |cint                     |6                        |1                        |47                       
+_0p12                    |cfloat                   |0.12                     |4                        |12126200                 
+_12p1                    |cfloat                   |12.1                     |4                        |12126200                 
+_7p0                     |cfloat                   |7.0                      |3                        |12126200                 
+_3p0                     |cfloat                   |3.0                      |3                        |12126200                 
+_inlist con expresiones  |cstring                  |INLIST con expresiones   |22                       |0                        
+_1                       |cint                     |1                        |1                        |12126200                 
+_2                       |cint                     |2                        |1                        |12126200                 
+_4p0                     |cfloat                   |4.0                      |3                        |12126200                 
+_4                       |cint                     |4                        |1                        |12126200                 
+_5                       |cint                     |5                        |1                        |12126200                 
+_encontrado              |cstring                  |encontrado               |10                       |1                        
+_no encontrado           |cstring                  |no encontrado            |13                       |0                        
 

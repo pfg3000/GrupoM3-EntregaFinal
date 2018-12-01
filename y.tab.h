@@ -139,7 +139,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 195 "sintactico.y"
+#line 196 "sintactico.y"
 
  char s[500];
 

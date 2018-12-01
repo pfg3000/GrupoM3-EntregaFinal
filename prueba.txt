@@ -7,9 +7,10 @@ pri : string
 ENDDEF
 
 a:=0.12;
-b:= 1;
+
 d:= 12.1;
 
+-/
 write "Escribir en pantalla";
 pri := "Hola";
 
@@ -17,19 +18,52 @@ write pri;
 write a;
 write b;
 write d;
-
-write "AVG Comun";
-a:= AVG([2, 4 , 6]);
-write a;
+/-
 
 -/
-write "IF COMUN";
+b:= 7;
+write "INLIST";
+if( INLIST(b;[1; 2; 3; 4; 5]) )
+{
+    write "encontrado";
+}
+else
+{
+    write "no encontrado";
+}
+/-
+
+b:= 7.0;
+c:= 3.0;
+write "INLIST con expresiones";
+if( INLIST(b;[1; 2; c + 4.0; 4; 5]) )
+{
+    write "encontrado";
+}
+else
+{
+    write "no encontrado";
+}
+
+-/
+write "AVG Comun";
+a:= AVG([2, 4, 6]);
+write a;
+
+write "AVG Con expresiones";
+a:= AVG([2, (b + b) / 2 , 6]);
+write a;
+/-
+
+-/
+write "IF Comun";
 if(b==1)
 {
     write a;
     write a;
 }
 /-
+
 -/
 write "IF CON ELSE";
 if(b==1)
@@ -41,6 +75,7 @@ else{
     write a;
 }
 /-
+
 -/
 write "IF CON AND";
 if((b==1) AND (a>0))
@@ -54,6 +89,7 @@ write "---IF CON AND ELSE";
 write "---IF CON AND ELSE";  
 }
 /-
+
 -/
 write "WHILE COMUN";
 while(b<5)
