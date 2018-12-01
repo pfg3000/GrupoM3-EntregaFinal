@@ -213,6 +213,7 @@ raiz: programa {    fprintf(stdout,"\nCompila OK\n\n");
                     CrearSymbolTable(symbolTable,"ts.txt");
                     //system("pause");
                     grabarPolaca(); 
+                    //system("pause");
                     generarAsm();   }
     ;
 
@@ -919,19 +920,20 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
     strcpy(type,tipo);
     strcpy(mynombre,nombre);
     downcase(type);
-    int use_pos = searchSymbol(nombre);
+
+    //printf("\n Llegue... \n");
+    if((strcmp(type,"float")==0 || strcmp(type,"cfloat")==0) && strstr(mynombre,".")!=NULL )
+        replace_str(mynombre);
+    
+    printf("\n Pase... %s \n",mynombre);
+system("pause");
+    int use_pos = searchSymbol(mynombre);
     if ( use_pos == -1){
         use_pos = pos_st;
         pos_st++;
     }
     symbol newSymbol;
     
-    //printf("\n Llegue... \n");
-    if((strcmp(type,"float")==0 || strcmp(type,"cfloat")==0) && strstr(mynombre,".")!=NULL )
-        replace_str(mynombre);
-    
-    //printf("\n Pase... \n");
-
     strcpy(newSymbol.nombre, prefix_(downcase(mynombre)));
     strcpy(newSymbol.tipo, type);
     if (valor == NULL){
@@ -951,6 +953,14 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
             exit(0);
             }
     }
+    // else{
+    // int pos = searchSymbol(nombre);
+    //     if(pos != -1)
+    //         {
+    //         newSymbol = nullSymbol;
+    //         return 0;
+    //         }
+    // }
     //system("pause");
     symbolTable[use_pos] = newSymbol;
     newSymbol = nullSymbol;
@@ -1610,6 +1620,10 @@ desapilarOperandos(2);
     char salto[50];
     char label[50];
 
+// (1+2) > a ==== 1 2 + a CMP
+// a > (1+2) ==== a 1 2 +  CMP
+
+if(strcmp(auxSymbol.nombre,"!")!=0 && strcmp(auxSymbol2.nombre,"!")!=0){
     if(strcmp(auxSymbol.tipo,"cfloat")==0 ||strcmp(auxSymbol.tipo,"cint")==0 ){
         fprintf(ArchivoAsm,"\tfld @%s\n",auxSymbol.nombre); //fld qword ptr ds:[_%s]\n
     }
@@ -1622,11 +1636,16 @@ desapilarOperandos(2);
     if(strcmp(auxSymbol2.tipo,"float")==0 ||strcmp(auxSymbol2.tipo,"int")==0 ){
         fprintf(ArchivoAsm,"\tfcomp @%s\n",&auxSymbol2.nombre[1]); //fld qword ptr ds:[_%s]\n
     }
-
-    
+}
+else{
+    if(strcmp(auxSymbol.tipo,"cfloat")==0 ||strcmp(auxSymbol.tipo,"cint")==0 ){
+        fprintf(ArchivoAsm,"\tfcomp @%s\n",auxSymbol.nombre); //fld qword ptr ds:[_%s]\n
+    }
+    if(strcmp(auxSymbol.tipo,"float")==0 ||strcmp(auxSymbol.tipo,"int")==0 ){
+        fprintf(ArchivoAsm,"\tfcomp @%s\n",&auxSymbol.nombre[1]); //fld qword ptr ds:[_%s]\n
+    }
+}
    
-
-
     fgets(label,sizeof(label),ArchivoPolaca);
     fgets(salto,sizeof(salto),ArchivoPolaca);
     strtok(salto,"\n");
@@ -1730,8 +1749,8 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
             }//printf("ERROR!!!\nNo se encuentra el operador %s\n",strOpe);
         }
 
-//printf("\nSimbolo1 %s ---Simbolo2 %s \n",auxSymbol.nombre,auxSymbol2.nombre);
-//printf("\nOPE Simbolo1 %s ---OPE Simbolo2 %s \n",strAux,strOpe);
+printf("\nSimbolo1 %s ---Simbolo2 %s \n",auxSymbol.nombre,auxSymbol2.nombre);
+printf("\nOPE Simbolo1 %s ---OPE Simbolo2 %s \n",strAux,strOpe);
 
     return;
 }
