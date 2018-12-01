@@ -82,7 +82,8 @@
      CMP_IGUAL = 298,
      ASIG = 299,
      AND = 300,
-     OR = 301
+     OR = 301,
+     NOT = 302
    };
 #endif
 /* Tokens.  */
@@ -130,6 +131,7 @@
 #define ASIG 299
 #define AND 300
 #define OR 301
+#define NOT 302
 
 
 
@@ -146,7 +148,7 @@ typedef union YYSTYPE
 
 
 /* Line 1676 of yacc.c  */
-#line 150 "y.tab.h"
+#line 152 "y.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

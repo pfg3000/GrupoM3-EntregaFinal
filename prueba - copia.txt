@@ -27,14 +27,6 @@ while(b<5)
     write a;
 }
 
-write "WHILE con NOT";
-b:=1;
-while(NOT b  > 5)
-{
-    b:=b+1;
-    write "entre al while con not";
-}
-
 -/ Implementacion de IF /-
 
 write "IF Comun";
@@ -72,13 +64,6 @@ write "ingresa al IF";
 else
 {
 write "ingresa al ELSE";
-}
-
-write "IF con NOT";
-b:=0;
-if(NOT b > 0 )
-{
-    write "entre al if con NOT";
 }
 
 write "IF con EXPRESIONES";

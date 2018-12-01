@@ -204,7 +204,7 @@ void consolidateIdType();
 %token OP_CONCAT OP_SUM OP_RES OP_DIV OP_MUL MOD DIV 
 %token CMP_MAY CMP_MEN CMP_MAYI CMP_MENI CMP_DIST CMP_IGUAL
 %token ASIG
-%token AND OR
+%token AND OR NOT
 %type <s> expresion
 
 %%
@@ -337,6 +337,13 @@ decision:
                                                 apilarPolaca(auxInlist);
                                                 desapilarEtiqueta();
                                                 strcat(Etiqueta,":");
+                                                if(hayAnd !=0 )
+                                                    {
+                                                    desapilarEtiqueta();
+                                                    strcat(EtiqDesa,":");
+                                                    apilarPolaca(EtiqDesa);
+                                                    hayAnd--;
+                                                    }
                                                 apilarEtiqueta(Etiqueta);
                                                 fprintf(stdout,"\nFin del then");
                                                 fflush(stdout); }
@@ -366,6 +373,7 @@ decision:
                                                 strcat(EtiqDesa,":");                                           
                                                 apilarPolaca(EtiqDesa); 
                                                 }
+ 
    ;
 
 iteracion: 
@@ -640,6 +648,55 @@ condicion:
                                                     apilarPolaca(Etiqueta);
                                                     apilarPolaca("JNZ");
                                                     strcpy(auxInlistwhile,Etiqueta);   }
+    |NOT expresion CMP_MAY expresion     {   fprintf(stdout,"\ncondicion - expresion CMP_MAY expresion");
+                                        fflush(stdout);
+                                        // validarTipos("float");
+                                        apilarPolaca("CMP");
+                                        generarEtiqueta();
+                                        apilarEtiqueta(Etiqueta);
+                                        apilarPolaca(Etiqueta);
+                                        apilarPolaca("JNAE");    }
+    |NOT expresion CMP_MEN expresion   {   fprintf(stdout,"\ncondicion - expresion CMP_MEN expresion");
+                                        fflush(stdout);
+                                        // validarTipos("float");
+                                        apilarPolaca("CMP");
+                                        generarEtiqueta();
+                                        apilarEtiqueta(Etiqueta);
+                                        apilarPolaca(Etiqueta);
+                                        apilarPolaca("JNBE");    }
+    |NOT expresion CMP_MAYI expresion   {  fprintf(stdout,"\ncondicion - expresion CMP_MAYI expresion");
+                                        fflush(stdout);
+                                        // validarTipos("float");
+                                        apilarPolaca("CMP");
+                                        generarEtiqueta();
+                                        apilarEtiqueta(Etiqueta);
+                                        apilarPolaca(Etiqueta);
+                                        apilarPolaca("JNA");   }
+    |NOT expresion CMP_MENI expresion  {   fprintf(stdout,"\ncondicion - expresion CMP_MENI expresion");
+                                        fflush(stdout);
+                                        // validarTipos("float");
+                                        apilarPolaca("CMP");
+                                        generarEtiqueta();
+                                        apilarEtiqueta(Etiqueta);
+                                        apilarPolaca(Etiqueta);
+                                        apilarPolaca("JNB");   }
+    |NOT expresion CMP_DIST expresion  {   fprintf(stdout,"\ncondicion - expresion CMP_DIST expresion");
+                                        fflush(stdout);
+                                        // validarTipos("float");
+                                        apilarPolaca("CMP");
+                                        generarEtiqueta();
+                                        apilarEtiqueta(Etiqueta);
+                                        apilarPolaca(Etiqueta);
+                                        apilarPolaca("JNZ"); }
+    |NOT expresion CMP_IGUAL expresion {   fprintf(stdout,"\ncondicion - expresion CMP_IGUAL expresion");
+                                        fflush(stdout);
+                                        // validarTipos("float");
+                                        apilarPolaca("CMP");
+                                        generarEtiqueta();
+                                        apilarEtiqueta(Etiqueta);
+                                        apilarPolaca(Etiqueta); 
+                                        apilarPolaca("JE");    }
+
     ;
 
 contenido_inlist: 
@@ -774,7 +831,7 @@ escritura:
     ;
 
 lectura:
-    READ ID PUNTO_Y_COMA    {   fprintf(stdout,"\nlectura - READ ID PUNTO_Y_COMA"); 
+    READ expresion PUNTO_Y_COMA    {   fprintf(stdout,"\nlectura - READ ID PUNTO_Y_COMA"); 
                                 fflush(stdout);
                                 apilarPolaca("READ");   }
 
@@ -926,7 +983,7 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
         replace_str(mynombre);
     
     printf("\n Pase... %s \n",mynombre);
-system("pause");
+//system("pause");
     int use_pos = searchSymbol(mynombre);
     if ( use_pos == -1){
         use_pos = pos_st;
@@ -1413,6 +1470,30 @@ void generarCONC(){
 	fprintf(ArchivoAsm,"\tMOV SI, OFFSET __auxConc\n");
     apilarOperando("__auxConc");
 }
+
+void generarREAD(){
+desapilarOperandos(1);
+
+if(strcmp(auxSymbol.tipo,"float")==0){
+    fprintf(ArchivoAsm,"\tgetFloat @%s, 2\n",&auxSymbol.nombre[1]);
+    goto sig;
+    } 
+if(strcmp(auxSymbol.tipo,"int")==0){
+    fprintf(ArchivoAsm,"\tgetFloat @%s, 2\n",&auxSymbol.nombre[1]);
+    goto sig;
+    } 
+
+if (strcmp(auxSymbol.tipo,"string")==0){
+    fprintf(ArchivoAsm,"\tgetString @%s, 2\n",&auxSymbol.nombre[1]);
+    } 
+else {
+    fprintf(ArchivoAsm,"\tgetString @%s, 2\n",&auxSymbol.nombre[1]);
+    }
+
+sig:
+fprintf(ArchivoAsm,"\tnewline\n");
+}
+
 void generarWRITE(){
 desapilarOperandos(1);
 
@@ -1620,8 +1701,10 @@ desapilarOperandos(2);
     char salto[50];
     char label[50];
 
-// (1+2) > a ==== 1 2 + a CMP
-// a > (1+2) ==== a 1 2 +  CMP
+// (1+2) > a ==== 1 2 + a CMP JNB
+// a < (1+2) ==== a 1 2 +  CMP JNA
+    // printf("generarCMP==== %s\n", auxSymbol.nombre);
+    // printf("generarCMP==== %s\n", auxSymbol2.nombre);
 
 if(strcmp(auxSymbol.nombre,"!")!=0 && strcmp(auxSymbol2.nombre,"!")!=0){
     if(strcmp(auxSymbol.tipo,"cfloat")==0 ||strcmp(auxSymbol.tipo,"cint")==0 ){
@@ -1719,7 +1802,7 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
         {
         auxSymbol = getSymbol(strOpe);
         
-        if(strstr(strOpe,"___")!=NULL)
+        if(strstr(strOpe,"___aux")!=NULL)
             {
             auxSymbol = getSymbolCTE(strOpe);
             }//printf("ERROR!!!\nNo se encuentra el operador %s -- %s\n",strOpe,auxSymbol.nombre);
@@ -1743,7 +1826,7 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
         {
         auxSymbol2 = getSymbol(strOpe);
         
-        if(strstr(strOpe,"___")!=NULL)
+        if(strstr(strOpe,"___aux")!=NULL)
             {
             auxSymbol2 = getSymbolCTE(strOpe);
             }//printf("ERROR!!!\nNo se encuentra el operador %s\n",strOpe);
@@ -1811,6 +1894,9 @@ void generarAsm(){
                                 else
                                     if(strstr(linea,":")!=NULL && strstr(linea,"@@etiq")!=NULL )
                                         fprintf(ArchivoAsm, "%s", linea);
+                                    else
+                                        if( strcmp(linea,"READ\n") == 0 )
+                                            generarREAD();
                                     else
                                         apilarOperando(linea);
 /*                    	if( strcmp(linea,"==\n") == 0

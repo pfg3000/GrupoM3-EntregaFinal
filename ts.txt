@@ -4,14 +4,41 @@ _d                       |float                    |d                        |1 
 _b                       |int                      |b                        |1                        |6845112                  
 _c                       |int                      |c                        |1                        |0                        
 _pri                     |string                   |pri                      |3                        |6845112                  
-_0p12                    |cfloat                   |0.12                     |4                        |12126200                 
-_12p1                    |cfloat                   |12.1                     |4                        |12126200                 
-_7p0                     |cfloat                   |7.0                      |3                        |12126200                 
-_inlist con expresiones  |cstring                  |INLIST con expresiones   |22                       |0                        
-_1                       |cint                     |1                        |1                        |12126200                 
-_2                       |cint                     |2                        |1                        |12126200                 
-_4                       |cint                     |4                        |1                        |12126200                 
-_5                       |cint                     |5                        |1                        |12126200                 
+_se declararon variables |cstring                  |Se declararon variables  |23                       |0                        
+_constantes numericas    |cstring                  |Constantes numericas     |20                       |0                        
+_0p12                    |cfloat                   |0.12                     |4                        |12060664                 
+_12p1                    |cfloat                   |12.1                     |4                        |12060664                 
+_1                       |cint                     |1                        |1                        |12060664                 
+_5                       |cint                     |5                        |1                        |12060664                 
+_constantes string       |cstring                  |Constantes string        |17                       |0                        
+_hola                    |cstring                  |Hola                     |4                        |0                        
+_while comun             |cstring                  |WHILE comun              |11                       |0                        
+_while con not           |cstring                  |WHILE con NOT            |13                       |0                        
+_entre al while con not  |cstring                  |entre al while con not   |22                       |0                        
+_if comun                |cstring                  |IF Comun                 |8                        |0                        
+_ingresa al if           |cstring                  |ingresa al IF            |13                       |0                        
+_if con else             |cstring                  |IF con ELSE              |11                       |0                        
+_ingresa al else         |cstring                  |ingresa al ELSE          |15                       |0                        
+_if con and              |cstring                  |IF con AND               |10                       |0                        
+_3                       |cint                     |3                        |1                        |12060664                 
+_0                       |cint                     |0                        |1                        |12060664                 
+_if con and y else       |cstring                  |IF con AND y ELSE        |17                       |0                        
+_if con not              |cstring                  |IF con NOT               |10                       |0                        
+_entre al if con not     |cstring                  |entre al if con NOT      |19                       |0                        
+_if con expresiones      |cstring                  |IF con EXPRESIONES       |18                       |0                        
+_6                       |cint                     |6                        |1                        |47                       
+_2                       |cint                     |2                        |1                        |12060664                 
+_asignaciones simples    |cstring                  |Asignaciones simples     |20                       |0                        
+_3p33                    |cfloat                   |3.33                     |4                        |12060664                 
+_entradas y salidas      |cstring                  |Entradas y salidas       |18                       |0                        
+_ingrese valor de a :    |cstring                  |Ingrese valor de a :     |21                       |0                        
+_temas especiales        |cstring                  |Temas Especiales         |16                       |0                        
+_inlist                  |cstring                  |INLIST                   |6                        |0                        
+_4                       |cint                     |4                        |1                        |12060664                 
 _encontrado              |cstring                  |encontrado               |10                       |1                        
 _no encontrado           |cstring                  |no encontrado            |13                       |0                        
+_inlist con expresiones  |cstring                  |INLIST con EXPRESIONES   |22                       |0                        
+_7p0                     |cfloat                   |7.0                      |3                        |12060664                 
+_avg comun               |cstring                  |AVG comun                |9                        |0                        
+_avg con expresiones     |cstring                  |AVG con EXPRESIONES      |19                       |0                        
 

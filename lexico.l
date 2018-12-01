@@ -62,6 +62,7 @@ ENDDEF      			{	return ENDDEF;	}
 "AVG"					{	return AVG;	}
 "AND"					{	return AND;	}
 "OR"					{	return OR;	}
+"NOT"					{	return NOT;	}
 MOD         			{	return MOD;	}
 DIV         			{	return DIV;	}
 ">"         			{	return CMP_MAY;	}
