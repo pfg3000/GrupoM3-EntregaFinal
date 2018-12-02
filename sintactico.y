@@ -648,7 +648,7 @@ condicion:
                                                     apilarPolaca(Etiqueta);
                                                     apilarPolaca("JNZ");
                                                     strcpy(auxInlistwhile,Etiqueta);   }
-    |NOT expresion CMP_MAY expresion     {   fprintf(stdout,"\ncondicion - expresion CMP_MAY expresion");
+    |NOT expresion CMP_MAY expresion     {   fprintf(stdout,"\ncondicion - NOT expresion CMP_MAY expresion");
                                         fflush(stdout);
                                         // validarTipos("float");
                                         apilarPolaca("CMP");
@@ -656,7 +656,7 @@ condicion:
                                         apilarEtiqueta(Etiqueta);
                                         apilarPolaca(Etiqueta);
                                         apilarPolaca("JNAE");    }
-    |NOT expresion CMP_MEN expresion   {   fprintf(stdout,"\ncondicion - expresion CMP_MEN expresion");
+    |NOT expresion CMP_MEN expresion   {   fprintf(stdout,"\ncondicion - NOT expresion CMP_MEN expresion");
                                         fflush(stdout);
                                         // validarTipos("float");
                                         apilarPolaca("CMP");
@@ -664,7 +664,7 @@ condicion:
                                         apilarEtiqueta(Etiqueta);
                                         apilarPolaca(Etiqueta);
                                         apilarPolaca("JNBE");    }
-    |NOT expresion CMP_MAYI expresion   {  fprintf(stdout,"\ncondicion - expresion CMP_MAYI expresion");
+    |NOT expresion CMP_MAYI expresion   {  fprintf(stdout,"\ncondicion - NOT expresion CMP_MAYI expresion");
                                         fflush(stdout);
                                         // validarTipos("float");
                                         apilarPolaca("CMP");
@@ -672,7 +672,7 @@ condicion:
                                         apilarEtiqueta(Etiqueta);
                                         apilarPolaca(Etiqueta);
                                         apilarPolaca("JNA");   }
-    |NOT expresion CMP_MENI expresion  {   fprintf(stdout,"\ncondicion - expresion CMP_MENI expresion");
+    |NOT expresion CMP_MENI expresion  {   fprintf(stdout,"\ncondicion - NOT expresion CMP_MENI expresion");
                                         fflush(stdout);
                                         // validarTipos("float");
                                         apilarPolaca("CMP");
@@ -680,7 +680,7 @@ condicion:
                                         apilarEtiqueta(Etiqueta);
                                         apilarPolaca(Etiqueta);
                                         apilarPolaca("JNB");   }
-    |NOT expresion CMP_DIST expresion  {   fprintf(stdout,"\ncondicion - expresion CMP_DIST expresion");
+    |NOT expresion CMP_DIST expresion  {   fprintf(stdout,"\ncondicion - NOT expresion CMP_DIST expresion");
                                         fflush(stdout);
                                         // validarTipos("float");
                                         apilarPolaca("CMP");
@@ -688,7 +688,7 @@ condicion:
                                         apilarEtiqueta(Etiqueta);
                                         apilarPolaca(Etiqueta);
                                         apilarPolaca("JNZ"); }
-    |NOT expresion CMP_IGUAL expresion {   fprintf(stdout,"\ncondicion - expresion CMP_IGUAL expresion");
+    |NOT expresion CMP_IGUAL expresion {   fprintf(stdout,"\ncondicion - NOT expresion CMP_IGUAL expresion");
                                         fflush(stdout);
                                         // validarTipos("float");
                                         apilarPolaca("CMP");
@@ -696,7 +696,6 @@ condicion:
                                         apilarEtiqueta(Etiqueta);
                                         apilarPolaca(Etiqueta); 
                                         apilarPolaca("JE");    }
-
     ;
 
 contenido_inlist: 
