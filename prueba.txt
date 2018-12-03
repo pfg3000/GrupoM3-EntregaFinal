@@ -1,9 +1,12 @@
 DEFVAR
 a, d : float
 b, c : int
-pri : string
+pri, p : string
 ENDDEF
+
 write "Se declararon variables";
+
+write "Uso de comentarios";
 
 -/ Constantes numericas /-
 write "Constantes numericas";
@@ -118,13 +121,6 @@ a := 3.33;
 d := a;
 write d;
 
--/Entradas y salidas /-
-
-write "Entradas y salidas";
-write "Ingrese valor de a : ";
-READ a;
-write a;
-
 -/Temas Especiales /-
 write "Temas Especiales";
 
@@ -159,3 +155,15 @@ write "AVG con EXPRESIONES";
 b:=5;
 a:= AVG([2, (b + b) / 2 , 6]);
 write a;
+
+-/READ y WRITE /-
+
+write "Entradas y salidas";
+write "Ingrese valor de a (float) : ";
+READ a;
+write a;
+
+write "Entradas y salidas";
+write "Ingrese valor de p (str) : ";
+READ p;
+write p;

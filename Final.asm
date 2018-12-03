@@ -21,7 +21,9 @@ vtext db 100 dup('$')
 	@b	dd	?
 	@c	dd	?
 	@pri	db	MAXTEXTSIZE dup (?),'$'
+	@p	db	MAXTEXTSIZE dup (?),'$'
 	@_se_declararon_variables	db	'Se declararon variables','$',26 dup (?)
+	@_uso_de_comentarios	db	'Uso de comentarios','$',31 dup (?)
 	@_constantes_numericas	db	'Constantes numericas','$',29 dup (?)
 	@_0p12	dd	0.120
 	@_12p1	dd	12.100
@@ -51,8 +53,6 @@ vtext db 100 dup('$')
 	@_2	dd	2.000
 	@_asignaciones_simples	db	'Asignaciones simples','$',29 dup (?)
 	@_3p33	dd	3.330
-	@_entradas_y_salidas	db	'Entradas y salidas','$',31 dup (?)
-	@_ingrese_valor_de_a___	db	'Ingrese valor de a : ','$',28 dup (?)
 	@_temas_especiales	db	'Temas Especiales','$',33 dup (?)
 	@_inlist	db	'INLIST','$',43 dup (?)
 	@_4	dd	4.000
@@ -62,9 +62,9 @@ vtext db 100 dup('$')
 	@_7p0	dd	7.000
 	@_avg_comun	db	'AVG comun','$',40 dup (?)
 	@_avg_con_expresiones	db	'AVG con EXPRESIONES','$',30 dup (?)
-	@_while_anidado	db	'WHILE anidado','$',36 dup (?)
-	@___entre_al_while_1	db	'**entre al WHILE 1','$',31 dup (?)
-	@___entre_al_while_2	db	'**entre al WHILE 2','$',31 dup (?)
+	@_entradas_y_salidas	db	'Entradas y salidas','$',31 dup (?)
+	@_ingrese_valor_de_a__float____	db	'Ingrese valor de a (float) : ','$',20 dup (?)
+	@_ingrese_valor_de_p__str____	db	'Ingrese valor de p (str) : ','$',22 dup (?)
 	@aux	DD 0.0
 	@___aux0 	DD 0.0
 	@___aux1 	DD 1.0
@@ -99,6 +99,11 @@ START:
 
 
 	LEA DX, @_se_declararon_variables 
+	MOV AH, 9
+	INT 21H
+	newline
+
+	LEA DX, @_uso_de_comentarios 
 	MOV AH, 9
 	INT 21H
 	newline
@@ -386,20 +391,6 @@ START:
 	displayFloat @d, 2
 	newline
 
-	LEA DX, @_entradas_y_salidas 
-	MOV AH, 9
-	INT 21H
-	newline
-
-	LEA DX, @_ingrese_valor_de_a___ 
-	MOV AH, 9
-	INT 21H
-	newline
-	getFloat @a, 2
-	newline
-	displayFloat @a, 2
-	newline
-
 	LEA DX, @_temas_especiales 
 	MOV AH, 9
 	INT 21H
@@ -603,48 +594,36 @@ START:
 	displayFloat @a, 2
 	newline
 
-	LEA DX, @_while_anidado 
+	LEA DX, @_entradas_y_salidas 
 	MOV AH, 9
 	INT 21H
 	newline
-	fld @_1
-	fstp @b
-	fld @_1
-	fstp @c
-@@etiq32:
-	fld @_3
-	fcomp @b
-	fstsw AX
-	sahf
-	JNA @@etiq33
-	fld @_1
-	fld @b
-	fadd St(0),St(1)
-	fstp @b
 
-	LEA DX, @___entre_al_while_1 
+	LEA DX, @_ingrese_valor_de_a__float____ 
 	MOV AH, 9
 	INT 21H
 	newline
-@@etiq34:
-	fld @_3
-	fcomp @c
-	fstsw AX
-	sahf
-	JNA @@etiq35
-	fld @_1
-	fld @c
-	fadd St(0),St(1)
-	fstp @c
+	getFloat @a, 2
+	newline
+	displayFloat @a, 2
+	newline
 
-	LEA DX, @___entre_al_while_2 
+	LEA DX, @_entradas_y_salidas 
 	MOV AH, 9
 	INT 21H
 	newline
-	jmp @@etiq34
-@@etiq30:
-	jmp @@etiq32
-@@etiq33:
+
+	LEA DX, @_ingrese_valor_de_p__str____ 
+	MOV AH, 9
+	INT 21H
+	newline
+	getString @p, 2
+	newline
+
+	LEA DX, @p 
+	MOV AH, 9
+	INT 21H
+	newline
 
 ;finaliza el asm
  	mov ah,4ch

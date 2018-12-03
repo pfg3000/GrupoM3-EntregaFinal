@@ -855,20 +855,13 @@ void guardarFloatEnTs(char flotante[]) {
 
 void replace_str(char *str)
 {
-    //printf("\n entro1 %s\n",str);
     char *ToRep = strstr(str,".");
-    //printf("\n entro2 %s\n",ToRep);
     if(ToRep!=NULL){
     char *Rest = (char*)malloc(strlen(ToRep)+1);
-    //printf("\n entro3 %s\n",Rest);
     strcpy(Rest,((ToRep)+strlen(".")));
-    //printf("\n entro4 %s\n",Rest);
     strcpy(ToRep,"p");
-    //printf("\n entro5 %s\n",ToRep);
     strcat(ToRep,Rest);
-    //printf("\n entro6 %s\n",ToRep);
     free(Rest);
-    //printf("\n entro7 %s\n",str);
     }
 }
 
@@ -901,7 +894,7 @@ void consolidateIdType() {
     int i;
     for(i=0; i < idPos; i++) {
         saveSymbol(varTypeArray[0][i],varTypeArray[1][i], NULL);
-        printf("------------ id %s tipo %s -------------",varTypeArray[0][i],varTypeArray[1][i]);
+        //printf("------------ id %s tipo %s -------------",varTypeArray[0][i],varTypeArray[1][i]);
     }
     idPos=0;
     typePos=0;
@@ -981,7 +974,7 @@ int saveSymbol(char nombre[], char tipo[], char valor[] ){
     if((strcmp(type,"float")==0 || strcmp(type,"cfloat")==0) && strstr(mynombre,".")!=NULL )
         replace_str(mynombre);
     
-    printf("\n Pase... %s \n",mynombre);
+    //printf("\n Pase... %s \n",mynombre);
 //system("pause");
     int use_pos = searchSymbol(mynombre);
     if ( use_pos == -1){
@@ -1255,7 +1248,7 @@ void desapilarOperando(){
 funcion que guarda en la pila un operando
 ***************************************************/
 void apilarOperando(char *strOp){
-    printf("Apilando %s --- %d\n", strOp, topePilaAsm);
+    printf("Apilando %s", strOp); //--- %d\n", strOp, topePilaAsm);
     strtok(strOp,"\n");
     strcpy(strPila[topePilaAsm],strOp);
     topePilaAsm++;
@@ -1378,7 +1371,7 @@ fprintf(p,"END START; final del archivo. \n");
     //for(i=0;i<100;i++){
         //fprintf(p,"\t@auxR%d \tDD 0.0\n",i);
         //fprintf(p,"\t@_auxE%d \tDW 0\n",i);
-        fprintf(p,"\t@aux\tDD 0.0\n");
+        fprintf(p,"\t@aux\tDD 0.0\n");//este aux es para el avg y el inlist
     //}
 
     		//DECLARACION DE CONSTANTES
@@ -1415,26 +1408,19 @@ void addTablaConstantes(char * nombre, char * valor, char * tipo)
     // if(strstr(valor,".")==NULL)
     //     strcat(valor,".0");
 
-    //printf("\n11111111111111111\n");
     if((strcmp(tipo,"float")==0 || strcmp(tipo,"cfloat")==0) && strstr(valor,".")==NULL)
         sprintf(tablaConstantes[indiceConstante].valor,"%s.0",valor);
     else
         strcpy(tablaConstantes[indiceConstante].valor,valor);
-    //printf("\n222222222222\n");
+
     strcpy(tablaConstantes[indiceConstante].tipo,tipo);
-    //printf("\n333333333333333333\n");
     tablaConstantes[indiceConstante].longitud=0;
-    //printf("\n444444444444444444\n");
     tablaConstantes[indiceConstante].limite=0;
-    //printf("\n5555555555555555555555\n");
 
     if((strcmp(tipo,"float")==0 || strcmp(tipo,"cfloat")==0) && strstr(nombre,".")!=NULL )
         replace_str(nombre);
-    //printf("\n6666666666666666666666 %s \t %s \t %s \n",nombre,valor,tipo);
-
 
     strcpy(tablaConstantes[indiceConstante].nombre,nombre);
-    //printf("\n777777777777777777777777\n");
     indiceConstante++;
 
 }
@@ -1599,8 +1585,8 @@ desapilarOperandos(2);
 
 void generarDIV(){
 desapilarOperandos(2);
-    printf("==== %s\n", auxSymbol.nombre);
-    printf("==== %s\n", auxSymbol2.nombre);
+    // printf("==== %s\n", auxSymbol.nombre);
+    // printf("==== %s\n", auxSymbol2.nombre);
 
     if(strcmp(auxSymbol.tipo,"cint")==0){
         fprintf(ArchivoAsm,"\tfld @%s\n",auxSymbol.nombre); //fld qword ptr ds:[_%s]\n
@@ -1663,9 +1649,6 @@ desapilarOperandos(2);
 //    apilarOperando("__result");
 }
 
-
-
-
 void generarMOD(){
 desapilarOperandos(2);
 
@@ -1700,8 +1683,6 @@ desapilarOperandos(2);
     char salto[50];
     char label[50];
 
-// (1+2) > a ==== 1 2 + a CMP JNB
-// a < (1+2) ==== a 1 2 +  CMP JNA
     // printf("generarCMP==== %s\n", auxSymbol.nombre);
     // printf("generarCMP==== %s\n", auxSymbol2.nombre);
 
@@ -1740,8 +1721,8 @@ else{
 void generarASIG(){
 desapilarOperandos(2);
 
-    printf("==== %s\n", auxSymbol.nombre);
-    printf("==== %s\n", auxSymbol2.nombre);
+    // printf("==== %s\n", auxSymbol.nombre);
+    // printf("==== %s\n", auxSymbol2.nombre);
     if(strcmp(auxSymbol.tipo,"string")==0){
         if(strcmp(auxSymbol2.tipo,"cstring")==0){
             fprintf(ArchivoAsm,"\tMOV SI, OFFSET @%s\n",auxSymbol2.nombre); //fld qword ptr ds:[_%s]\n
@@ -1779,10 +1760,6 @@ desapilarOperandos(2);
             fprintf(ArchivoAsm,"\tMOV DI, OFFSET @%s\n",&auxSymbol.nombre[1]);
             fprintf(ArchivoAsm,"\tCALL COPIAR\n");
     }
-    // a:= 1
-    // a:= b /b
-    // a:= b /b cadena
-    // a:= "cadena"
 }
 
 void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
@@ -1831,8 +1808,8 @@ void desapilarOperandos(int cant) //1 o 2 oeprandos desapilarOperandos(2);
             }//printf("ERROR!!!\nNo se encuentra el operador %s\n",strOpe);
         }
 
-printf("\nSimbolo1 %s ---Simbolo2 %s \n",auxSymbol.nombre,auxSymbol2.nombre);
-printf("\nOPE Simbolo1 %s ---OPE Simbolo2 %s \n",strAux,strOpe);
+// printf("\nSimbolo1 %s ---Simbolo2 %s \n",auxSymbol.nombre,auxSymbol2.nombre);
+// printf("\nOPE Simbolo1 %s ---OPE Simbolo2 %s \n",strAux,strOpe);
 
     return;
 }
@@ -1857,7 +1834,7 @@ void generarAsm(){
     fprintf(ArchivoAsm,"\n\n;Comienzo codigo de usuario\n\n");
 
     while(fgets(linea,sizeof(linea),ArchivoPolaca)!=NULL){
-        printf("\n ************* %s ************* \n", linea);
+        //printf("\n ************* %s ************* \n", linea);
         if( strcmp(linea,"+\n") == 0 )
             generarADD();
         else
@@ -1898,20 +1875,6 @@ void generarAsm(){
                                             generarREAD();
                                     else
                                         apilarOperando(linea);
-/*                    	if( strcmp(linea,"==\n") == 0
-    		                  || strcmp(linea,"<\n") == 0
-    		                  || strcmp(linea,"<=\n") == 0
-    		                  || strcmp(linea,">\n") == 0
-    		                  || strcmp(linea,">=\n") == 0
-    		                  || strcmp(linea,"!=\n") == 0 ) //comparacion
-    		;                //    generarCMP(linea); //funcion que genera el codigo asm para los comparadores
-    		                  else
-    		                    if( strcmp(linea,"BF\n") == 0 || strcmp(linea,"BV\n") == 0 || strcmp(linea,"BI\n") == 0)
-    		 ;                 //    generarSalto(linea);
-    		                    else
-    		                      if(strchr(linea, ':') && linea[0]!='_')
-    		  ;                  //    ponerEtiqueta(linea);
-*/
     }
     imprimirFin(ArchivoAsm);
     imprimirProcs(ArchivoAsm);
