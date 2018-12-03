@@ -3,7 +3,6 @@ a, d : float
 b, c : int
 pri : string
 ENDDEF
-
 write "Se declararon variables";
 
 -/ Constantes numericas /-
@@ -13,6 +12,13 @@ d:= 12.1;
 b:=1;
 c:=5;
 
+write "Asignacion con expresion";
+c:=a+1;
+write c;
+
+write a;
+write b;
+
 -/ Constantes string /-
 write "Constantes string";
 pri := "Hola";
@@ -21,37 +27,55 @@ write pri;
 -/ Implementacion clico WHILE /-
 
 write "WHILE comun";
-while(b<5)
+b:=1;
+while(b<3)
 {
     b:=b+1;
-    write a;
+    write "**entre al WHILE";
 }
 
 write "WHILE con NOT";
 b:=1;
-while(NOT b  > 5)
+while(NOT b  > 3)
 {
     b:=b+1;
-    write "entre al while con not";
+    write "**entre al WHILE con NOT";
 }
 
 -/ Implementacion de IF /-
 
-write "IF Comun";
+write "IF comun (entra)";
 b:= 1;
 if(b==1)
 {
-    write "ingresa al IF";
+    write "**ingresa al IF";
 }
 
-write "IF con ELSE";
+write "IF comun (no entra)";
+b:= 1;
+if(b!=1)
+{
+    write "**ingresa al IF";
+}
+
+write "IF con ELSE (entra if)";
 b:= 1;
 if(b==1)
 {
-    write "ingresa al IF";
+    write "**ingresa al IF";
 }
 else{
-    write "ingresa al ELSE";
+    write "**ingresa al ELSE";
+}
+
+write "IF con ELSE (entra else)";
+b:= 1;
+if(b!=1)
+{
+    write "**ingresa al IF";
+}
+else{
+    write "**ingresa al ELSE";
 }
 
 write "IF con AND";
@@ -59,7 +83,7 @@ b:= 1;
 a:= 3;
 if((b==1) AND (a>0))
 {
-write "ingresa al IF";
+write "**ingresa al IF";
 }
 
 write "IF con AND y ELSE";
@@ -67,25 +91,25 @@ b:= 1;
 a:= 3;
 if((b==1) AND (a>0))
 {
-write "ingresa al IF";
+write "**ingresa al IF";
 }
 else
 {
-write "ingresa al ELSE";
+write "**ingresa al ELSE";
 }
 
 write "IF con NOT";
 b:=0;
 if(NOT b > 0 )
 {
-    write "entre al if con NOT";
+    write "**entre al IF con NOT";
 }
 
 write "IF con EXPRESIONES";
 b:=6;
 if(b<b+2)
 {
-    write "ingresa al IF";
+    write "**ingresa al IF";
 }
 
 -/Asignaciones simples /-
@@ -108,11 +132,11 @@ write "INLIST";
 b:= 5;
 if( INLIST(b;[1; 2; 3; 4; 5]) )
 {
-    write "encontrado";
+    write "**encontrado";
 }
 else
 {
-    write "no encontrado";
+    write "**no encontrado";
 }
 
 write "INLIST con EXPRESIONES";
@@ -120,11 +144,11 @@ b:= 7.0;
 c:= 7.0;
 if( INLIST(b;[1; 2; c+1 ; 4; 5]) )
 {
-    write "encontrado";
+    write "**encontrado";
 }
 else
 {
-    write "no encontrado";
+    write "**no encontrado";
 }
 
 write "AVG comun";

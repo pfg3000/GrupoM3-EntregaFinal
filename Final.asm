@@ -27,21 +27,25 @@ vtext db 100 dup('$')
 	@_12p1	dd	12.100
 	@_1	dd	1.000
 	@_5	dd	5.000
+	@_asignacion_con_expresion	db	'Asignacion con expresion','$',25 dup (?)
 	@_constantes_string	db	'Constantes string','$',32 dup (?)
 	@_hola	db	'Hola','$',45 dup (?)
 	@_while_comun	db	'WHILE comun','$',38 dup (?)
-	@_while_con_not	db	'WHILE con NOT','$',36 dup (?)
-	@_entre_al_while_con_not	db	'entre al while con not','$',27 dup (?)
-	@_if_comun	db	'IF Comun','$',41 dup (?)
-	@_ingresa_al_if	db	'ingresa al IF','$',36 dup (?)
-	@_if_con_else	db	'IF con ELSE','$',38 dup (?)
-	@_ingresa_al_else	db	'ingresa al ELSE','$',34 dup (?)
-	@_if_con_and	db	'IF con AND','$',39 dup (?)
 	@_3	dd	3.000
+	@___entre_al_while	db	'**entre al WHILE','$',33 dup (?)
+	@_while_con_not	db	'WHILE con NOT','$',36 dup (?)
+	@___entre_al_while_con_not	db	'**entre al WHILE con NOT','$',25 dup (?)
+	@_if_comun__entra_	db	'IF comun (entra)','$',33 dup (?)
+	@___ingresa_al_if	db	'**ingresa al IF','$',34 dup (?)
+	@_if_comun__no_entra_	db	'IF comun (no entra)','$',30 dup (?)
+	@_if_con_else__entra_if_	db	'IF con ELSE (entra if)','$',27 dup (?)
+	@___ingresa_al_else	db	'**ingresa al ELSE','$',32 dup (?)
+	@_if_con_else__entra_else_	db	'IF con ELSE (entra else)','$',25 dup (?)
+	@_if_con_and	db	'IF con AND','$',39 dup (?)
 	@_0	dd	0.000
 	@_if_con_and_y_else	db	'IF con AND y ELSE','$',32 dup (?)
 	@_if_con_not	db	'IF con NOT','$',39 dup (?)
-	@_entre_al_if_con_not	db	'entre al if con NOT','$',30 dup (?)
+	@___entre_al_if_con_not	db	'**entre al IF con NOT','$',28 dup (?)
 	@_if_con_expresiones	db	'IF con EXPRESIONES','$',31 dup (?)
 	@_6	dd	6.000
 	@_2	dd	2.000
@@ -52,12 +56,15 @@ vtext db 100 dup('$')
 	@_temas_especiales	db	'Temas Especiales','$',33 dup (?)
 	@_inlist	db	'INLIST','$',43 dup (?)
 	@_4	dd	4.000
-	@_encontrado	db	'encontrado','$',39 dup (?)
-	@_no_encontrado	db	'no encontrado','$',36 dup (?)
+	@___encontrado	db	'**encontrado','$',37 dup (?)
+	@___no_encontrado	db	'**no encontrado','$',34 dup (?)
 	@_inlist_con_expresiones	db	'INLIST con EXPRESIONES','$',27 dup (?)
 	@_7p0	dd	7.000
 	@_avg_comun	db	'AVG comun','$',40 dup (?)
 	@_avg_con_expresiones	db	'AVG con EXPRESIONES','$',30 dup (?)
+	@_while_anidado	db	'WHILE anidado','$',36 dup (?)
+	@___entre_al_while_1	db	'**entre al WHILE 1','$',31 dup (?)
+	@___entre_al_while_2	db	'**entre al WHILE 2','$',31 dup (?)
 	@aux	DD 0.0
 	@___aux0 	DD 0.0
 	@___aux1 	DD 1.0
@@ -109,6 +116,21 @@ START:
 	fld @_5
 	fstp @c
 
+	LEA DX, @_asignacion_con_expresion 
+	MOV AH, 9
+	INT 21H
+	newline
+	fld @_1
+	fld @a
+	fadd St(0),St(1)
+	fstp @c
+	displayFloat @c, 2
+	newline
+	displayFloat @a, 2
+	newline
+	displayFloat @b, 2
+	newline
+
 	LEA DX, @_constantes_string 
 	MOV AH, 9
 	INT 21H
@@ -126,8 +148,10 @@ START:
 	MOV AH, 9
 	INT 21H
 	newline
+	fld @_1
+	fstp @b
 @@etiq1:
-	fld @_5
+	fld @_3
 	fcomp @b
 	fstsw AX
 	sahf
@@ -136,7 +160,10 @@ START:
 	fld @b
 	fadd St(0),St(1)
 	fstp @b
-	displayFloat @a, 2
+
+	LEA DX, @___entre_al_while 
+	MOV AH, 9
+	INT 21H
 	newline
 	jmp @@etiq1
 @@etiq2:
@@ -148,7 +175,7 @@ START:
 	fld @_1
 	fstp @b
 @@etiq3:
-	fld @_5
+	fld @_3
 	fcomp @b
 	fstsw AX
 	sahf
@@ -158,14 +185,14 @@ START:
 	fadd St(0),St(1)
 	fstp @b
 
-	LEA DX, @_entre_al_while_con_not 
+	LEA DX, @___entre_al_while_con_not 
 	MOV AH, 9
 	INT 21H
 	newline
 	jmp @@etiq3
 @@etiq4:
 
-	LEA DX, @_if_comun 
+	LEA DX, @_if_comun__entra_ 
 	MOV AH, 9
 	INT 21H
 	newline
@@ -177,13 +204,13 @@ START:
 	sahf
 	JNZ @@etiq5
 
-	LEA DX, @_ingresa_al_if 
+	LEA DX, @___ingresa_al_if 
 	MOV AH, 9
 	INT 21H
 	newline
 @@etiq5:
 
-	LEA DX, @_if_con_else 
+	LEA DX, @_if_comun__no_entra_ 
 	MOV AH, 9
 	INT 21H
 	newline
@@ -193,20 +220,63 @@ START:
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq6
+	JE @@etiq6
 
-	LEA DX, @_ingresa_al_if 
+	LEA DX, @___ingresa_al_if 
 	MOV AH, 9
 	INT 21H
 	newline
-	jmp @@etiq7
 @@etiq6:
 
-	LEA DX, @_ingresa_al_else 
+	LEA DX, @_if_con_else__entra_if_ 
 	MOV AH, 9
 	INT 21H
 	newline
+	fld @_1
+	fstp @b
+	fld @_1
+	fcomp @b
+	fstsw AX
+	sahf
+	JNZ @@etiq7
+
+	LEA DX, @___ingresa_al_if 
+	MOV AH, 9
+	INT 21H
+	newline
+	jmp @@etiq8
 @@etiq7:
+
+	LEA DX, @___ingresa_al_else 
+	MOV AH, 9
+	INT 21H
+	newline
+@@etiq8:
+
+	LEA DX, @_if_con_else__entra_else_ 
+	MOV AH, 9
+	INT 21H
+	newline
+	fld @_1
+	fstp @b
+	fld @_1
+	fcomp @b
+	fstsw AX
+	sahf
+	JE @@etiq9
+
+	LEA DX, @___ingresa_al_if 
+	MOV AH, 9
+	INT 21H
+	newline
+	jmp @@etiq10
+@@etiq9:
+
+	LEA DX, @___ingresa_al_else 
+	MOV AH, 9
+	INT 21H
+	newline
+@@etiq10:
 
 	LEA DX, @_if_con_and 
 	MOV AH, 9
@@ -220,19 +290,19 @@ START:
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq8
+	JNZ @@etiq11
 	fld @_0
 	fcomp @a
 	fstsw AX
 	sahf
-	JNB @@etiq9
+	JNB @@etiq12
 
-	LEA DX, @_ingresa_al_if 
+	LEA DX, @___ingresa_al_if 
 	MOV AH, 9
 	INT 21H
 	newline
-@@etiq9:
-@@etiq8:
+@@etiq12:
+@@etiq11:
 
 	LEA DX, @_if_con_and_y_else 
 	MOV AH, 9
@@ -246,26 +316,26 @@ START:
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq10
+	JNZ @@etiq13
 	fld @_0
 	fcomp @a
 	fstsw AX
 	sahf
-	JNB @@etiq11
+	JNB @@etiq14
 
-	LEA DX, @_ingresa_al_if 
+	LEA DX, @___ingresa_al_if 
 	MOV AH, 9
 	INT 21H
 	newline
-	jmp @@etiq12
-@@etiq11:
-@@etiq10:
+	jmp @@etiq15
+@@etiq14:
+@@etiq13:
 
-	LEA DX, @_ingresa_al_else 
+	LEA DX, @___ingresa_al_else 
 	MOV AH, 9
 	INT 21H
 	newline
-@@etiq12:
+@@etiq15:
 
 	LEA DX, @_if_con_not 
 	MOV AH, 9
@@ -277,13 +347,13 @@ START:
 	fcomp @b
 	fstsw AX
 	sahf
-	JNAE @@etiq13
+	JNAE @@etiq16
 
-	LEA DX, @_entre_al_if_con_not 
+	LEA DX, @___entre_al_if_con_not 
 	MOV AH, 9
 	INT 21H
 	newline
-@@etiq13:
+@@etiq16:
 
 	LEA DX, @_if_con_expresiones 
 	MOV AH, 9
@@ -297,13 +367,13 @@ START:
 	fcomp @b
 	fstsw AX
 	sahf
-	JNA @@etiq14
+	JNA @@etiq17
 
-	LEA DX, @_ingresa_al_if 
+	LEA DX, @___ingresa_al_if 
 	MOV AH, 9
 	INT 21H
 	newline
-@@etiq14:
+@@etiq17:
 
 	LEA DX, @_asignaciones_simples 
 	MOV AH, 9
@@ -347,60 +417,60 @@ START:
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq15
+	JNZ @@etiq18
 	fld @___aux1
 	fstp @aux
-@@etiq15:
+@@etiq18:
 	fld @_2
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq16
+	JNZ @@etiq19
 	fld @___aux2
 	fstp @aux
-@@etiq16:
+@@etiq19:
 	fld @_3
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq17
+	JNZ @@etiq20
 	fld @___aux3
 	fstp @aux
-@@etiq17:
+@@etiq20:
 	fld @_4
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq18
+	JNZ @@etiq21
 	fld @___aux4
 	fstp @aux
-@@etiq18:
+@@etiq21:
 	fld @_5
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq19
+	JNZ @@etiq22
 	fld @___aux5
 	fstp @aux
-@@etiq19:
+@@etiq22:
 	fld @aux
 	fcomp @___aux6
 	fstsw AX
 	sahf
-	JNZ @@etiq20
+	JNZ @@etiq23
 
-	LEA DX, @_encontrado 
+	LEA DX, @___encontrado 
 	MOV AH, 9
 	INT 21H
 	newline
-	jmp @@etiq21
-@@etiq20:
+	jmp @@etiq24
+@@etiq23:
 
-	LEA DX, @_no_encontrado 
+	LEA DX, @___no_encontrado 
 	MOV AH, 9
 	INT 21H
 	newline
-@@etiq21:
+@@etiq24:
 
 	LEA DX, @_inlist_con_expresiones 
 	MOV AH, 9
@@ -416,62 +486,62 @@ START:
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq22
+	JNZ @@etiq25
 	fld @___aux8
 	fstp @aux
-@@etiq22:
+@@etiq25:
 	fld @_2
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq23
+	JNZ @@etiq26
 	fld @___aux9
 	fstp @aux
-@@etiq23:
+@@etiq26:
 	fld @_1
 	fld @c
 	fadd St(0),St(1)
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq24
+	JNZ @@etiq27
 	fld @___aux10
 	fstp @aux
-@@etiq24:
+@@etiq27:
 	fld @_4
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq25
+	JNZ @@etiq28
 	fld @___aux11
 	fstp @aux
-@@etiq25:
+@@etiq28:
 	fld @_5
 	fcomp @b
 	fstsw AX
 	sahf
-	JNZ @@etiq26
+	JNZ @@etiq29
 	fld @___aux12
 	fstp @aux
-@@etiq26:
+@@etiq29:
 	fld @aux
 	fcomp @___aux13
 	fstsw AX
 	sahf
-	JNZ @@etiq27
+	JNZ @@etiq30
 
-	LEA DX, @_encontrado 
+	LEA DX, @___encontrado 
 	MOV AH, 9
 	INT 21H
 	newline
-	jmp @@etiq28
-@@etiq27:
+	jmp @@etiq31
+@@etiq30:
 
-	LEA DX, @_no_encontrado 
+	LEA DX, @___no_encontrado 
 	MOV AH, 9
 	INT 21H
 	newline
-@@etiq28:
+@@etiq31:
 
 	LEA DX, @_avg_comun 
 	MOV AH, 9
@@ -532,6 +602,49 @@ START:
 	fstp @a
 	displayFloat @a, 2
 	newline
+
+	LEA DX, @_while_anidado 
+	MOV AH, 9
+	INT 21H
+	newline
+	fld @_1
+	fstp @b
+	fld @_1
+	fstp @c
+@@etiq32:
+	fld @_3
+	fcomp @b
+	fstsw AX
+	sahf
+	JNA @@etiq33
+	fld @_1
+	fld @b
+	fadd St(0),St(1)
+	fstp @b
+
+	LEA DX, @___entre_al_while_1 
+	MOV AH, 9
+	INT 21H
+	newline
+@@etiq34:
+	fld @_3
+	fcomp @c
+	fstsw AX
+	sahf
+	JNA @@etiq35
+	fld @_1
+	fld @c
+	fadd St(0),St(1)
+	fstp @c
+
+	LEA DX, @___entre_al_while_2 
+	MOV AH, 9
+	INT 21H
+	newline
+	jmp @@etiq34
+@@etiq30:
+	jmp @@etiq32
+@@etiq33:
 
 ;finaliza el asm
  	mov ah,4ch
